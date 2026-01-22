@@ -1,0 +1,24 @@
+name: Deploy Remover Background
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.DEPLOY_TEST_SECRET }}
+          port: 22
+          script: |
+            cd "/home/${{ secrets.USERNAME }}/remover-background---python"
+            
+            git pull origin main
+            pip install --upgrade pip
+            pip install -r requirements.txt
